@@ -1,0 +1,9 @@
+cluster:
+  name: my-cluster
+  cloud: aws
+  region: us-east-1
+  vpc_id: vpc-123456
+  subnet_ids:
+  - subnet-123456
+database:
+  port: 5432

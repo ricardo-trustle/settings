@@ -1,0 +1,8 @@
+database:
+  name: !ENV ${DB_NAME:postgres}
+  host: localhost
+  username: !ENV ${DB_USER:default_user}
+  password: !ENV ${DB_PASS:default_pass1234}
+  port: 5432
+  sslmode: disable
+  

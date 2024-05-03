@@ -1,0 +1,13 @@
+cluster:
+  name: prod-cluster
+  vpc_id: vpc-456789
+  subnet_ids:
+  - subnet-456789
+database:
+  name: !ENV ${DB_NAME}
+  host: !ENV ${DB_HOST}
+  username: !ENV ${DB_USER}
+  password: !ENV ${DB_PASS}
+  port: 5432
+  sslmode: require
+  sslrootcert: /etc/ssl/certs/ca-certificates.crt

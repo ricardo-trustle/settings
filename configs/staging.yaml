@@ -1,0 +1,8 @@
+database:
+  name: !ENV ${DB_NAME:postgres}
+  host: staging.example.com
+  username: !ENV ${DB_USER}
+  password: !ENV ${DB_PASS}
+  port: 5432
+  sslmode: require
+  sslrootcert: /etc/ssl/certs/ca-certificates.crt
