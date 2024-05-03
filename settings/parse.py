@@ -3,7 +3,7 @@ import os
 from pprint import pprint
 import logging
 from logging import Logger
-
+from .validation import valid
 
 DEFAULT_ENV = "local"
 COMMON_FILE = "../configs/common.yaml"
@@ -23,6 +23,11 @@ def settings(logger: Logger) -> BaseConfig:
     config_specific = parse_config(config_specific_path)
 
     merge(config_common, config_specific)
+
+    if not valid(config_common):
+        logger.error("Invalid configuration: " + pprint.pformat(config_common))
+        raise Exception("Invalid configuration")
+
     base_config = BaseConfig(config_common)
     return base_config
 

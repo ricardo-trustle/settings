@@ -2,12 +2,18 @@ from settings.parse import settings
 import pytest
 import logging
 from logging import Logger
-import os
+import os, sys
 
 
 @pytest.fixture
 def logger() -> Logger:
-    return logging.getLogger("settings")
+    l = logging.getLogger("settings")
+    handler = logging.StreamHandler(stream=sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    format = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(format)
+    l.addHandler(handler)
+    return l
 
 
 @pytest.fixture
@@ -97,3 +103,10 @@ def test_prod_settings(logger: Logger, env) -> None:
     assert base_config.cluster.region == "us-east-1"
     assert base_config.cluster.vpc_id == "vpc-456789"
     assert base_config.cluster.subnet_ids == ["subnet-456789"]
+
+
+def test_invalid_settings(logger: Logger, env) -> None:
+    env(False)
+    os.environ["ENV"] = "invalid"
+    with pytest.raises(Exception):
+        _ = settings(logger)
