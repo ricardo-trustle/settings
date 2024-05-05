@@ -1,43 +1,96 @@
 # App Settings
 
-Python YAML configuration with environment variables and hierarchical configurations
+Python YAML configuration with environment variables and hierarchical configurations.
 
+- Configuration in YAML format
+- Use different configurations for dev, staging, prod, etc
+- Have a common setting defined in single file
+- Configuration validation with `pydantic`
+- Environments variables can override the settings in the config files
+- Possibility of reading an environment file in dot env format
 
 ## Run the example:
 
 ```sh
-
 poetry shell
 
-export $(cat .env | grep -v "#" | xargs -L 1)
+PYTHONPATH=$PYTHONPATH:. python app/main.py --help                               
+# Usage: main.py [OPTIONS]
 
-PYTHONPATH=$PYTHONPATH:. python app/main.py
+# Options:
+#   -e, --env PATH
+#   -c, --config TEXT
+#   --help             Show this message and exit.
+
+PYTHONPATH=$PYTHONPATH:. python app/main.py                                        
 # ==> my-cluster
 # ==> aws
 # ==> us-east-1
 # ==> vpc-123456
 # ==> ['subnet-123456']
-# ==> postgres
-# ==> staging.example.com
-# ==> root
-# ==> pass1234
+# ==> dotenv_name
+# ==> localhost
+# ==> dotenv_root
+# ==> dotenv_pass1234
+# ==> 5432
+# ==> disable
+
+PYTHONPATH=$PYTHONPATH:. python app/main.py --env ./env-template                   
+# ==> my-cluster
+# ==> aws
+# ==> us-east-1
+# ==> vpc-123456
+# ==> ['subnet-123456']
+# ==> templ_name
+# ==> localhost
+# ==> templ_user
+# ==> templ_pass
+# ==> 5432
+# ==> disable
+
+PYTHONPATH=$PYTHONPATH:. python app/main.py --config prod.yaml 
+# ==> prod-cluster
+# ==> aws
+# ==> us-east-1
+# ==> vpc-456789
+# ==> ['subnet-456789']
+# ==> dotenv_name
+# ==> dotenv_localhost
+# ==> dotenv_root
+# ==> dotenv_pass1234
 # ==> 5432
 # ==> require
 
-pytest -v                                  
+PYTHONPATH=$PYTHONPATH:. python app/main.py --env ./env-template --config prod.yaml
+# ==> prod-cluster
+# ==> aws
+# ==> us-east-1
+# ==> vpc-456789
+# ==> ['subnet-456789']
+# ==> templ_name
+# ==> templ_host
+# ==> templ_user
+# ==> templ_pass
+# ==> 5432
+# ==> require
+
+pytest -v -s
 # ===================================================================== test session starts ======================================================================
 # platform linux -- Python 3.12.3, pytest-8.2.0, pluggy-1.5.0 -- /home/leal/.cache/pypoetry/virtualenvs/settings-Mc-3974F-py3.12/bin/python
 # cachedir: .pytest_cache
 # rootdir: /home/leal/git-work/settings
 # configfile: pyproject.toml
-# collected 4 items                                                                                                                                              
+# collected 7 items                                                                                                                                              
 
-# tests/test_settings.py::test_default_settings PASSED                                                                                                     [ 25%]
-# tests/test_settings.py::test_local_settings PASSED                                                                                                       [ 50%]
-# tests/test_settings.py::test_staging_settings PASSED                                                                                                     [ 75%]
-# tests/test_settings.py::test_prod_settings PASSED                                                                                                        [100%]
+# tests/test_settings.py::test_default_settings PASSED
+# tests/test_settings.py::test_local_settings PASSED
+# tests/test_settings.py::test_staging_settings PASSED
+# tests/test_settings.py::test_prod_settings PASSED
+# tests/test_settings.py::test_invalid_settings PASSED
+# tests/test_settings.py::test_prod_settings_with_env[True] PASSED
+# tests/test_settings.py::test_prod_settings_with_env[False] PASSED
 
-# ====================================================================== 4 passed in 0.04s =======================================================================
+# ====================================================================== 7 passed in 0.17s =======================================================================
 
 ```
 

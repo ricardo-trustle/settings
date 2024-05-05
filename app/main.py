@@ -1,11 +1,35 @@
 from pprint import pprint
 import logging
-from settings.parse import settings
+from settings.parse import settings, DEFAULT_CONFIG
+from settings.env import load_envvars_file
+from pathlib import Path
+import click
 
 
-def run() -> None:
+@click.command()
+@click.option(
+    "-e",
+    "--env",
+    type=click.Path(
+        exists=True,
+        file_okay=True,
+        readable=True,
+        path_type=Path,
+    ),
+    default=Path(".env"),
+)
+@click.option(
+    "-c",
+    "--config",
+    type=click.STRING,
+    default=DEFAULT_CONFIG,
+)
+def run(env, config) -> None:
     log = logging.getLogger(__name__)
-    base_config = settings(log)
+
+    load_envvars_file(env)
+
+    base_config = settings(log, config)
 
     print("==>", base_config.cluster.name)
     print("==>", base_config.cluster.cloud)

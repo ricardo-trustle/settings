@@ -1,6 +1,6 @@
 # export $(cat .env | grep -v "#" | xargs -L 1)
-ENV=staging
-DB_USER=root
-DB_PASS=pass1234
-DB_HOST=localhost
-DB_PORT=5432
+DB_USER=templ_user
+DB_PASS=templ_pass
+DB_NAME=templ_name
+DB_HOST=templ_host
+DB_PORT=11111
